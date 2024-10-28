@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ItemType
 {
@@ -28,6 +29,7 @@ public class ItemDataConsumable
 [CreateAssetMenu( fileName = "ItemSO", menuName = "DefaultItemSO", order = 0)]
 public class ItemSO : ScriptableObject
 {
+
     [Header("Info")]
     public string itemName;
     public string description;

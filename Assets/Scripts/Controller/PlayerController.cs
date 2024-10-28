@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
     private float verticalRotation;
 
     public event Action Jump;
+    public event Action ToggleInventory;
+
+    private bool isOpenInventory = false;
 
 
     private void Awake()
@@ -55,8 +58,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
-        CameraLook();
+        if (!isOpenInventory)
+        {
+            Move();
+            CameraLook();
+            animator.SetFloat("Speed", rb.velocity.magnitude);
+        }
     }
 
     private void Move()
@@ -67,7 +74,8 @@ public class PlayerController : MonoBehaviour
         moveDirection.Normalize();
         if (isTPView && moveDirection != Vector3.zero)
         {
-            transform.rotation = Camera.main.transform.rotation;
+            Vector3 cameraRotation = Camera.main.transform.rotation.eulerAngles;
+            transform.rotation = Quaternion.Euler(0, cameraRotation.y, 0);
         }
 
         moveDirection.y = rb.velocity.y;
@@ -189,6 +197,16 @@ public class PlayerController : MonoBehaviour
         {
             runSpeed = 1;
             isRunning = false;
+        }
+    }
+
+    public void OnToggleInventory(InputAction.CallbackContext context)
+    {
+        if(context.phase == InputActionPhase.Started)
+        {
+            ToggleInventory?.Invoke();
+            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.Confined : CursorLockMode.Locked;
+            isOpenInventory = !isOpenInventory;
         }
     }
 }

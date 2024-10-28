@@ -46,6 +46,7 @@ public class Interaction : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
+            if (curInteractable == null) return;
             curInteractable.OnInteract();
             curInteractable = null;
             curInteractingObject = null;
@@ -56,26 +57,41 @@ public class Interaction : MonoBehaviour
 
     private void Search()
     {
-        Ray ray;
+        Ray[] ray;
         RaycastHit hit;
-        if (!controller.isTPView)
-            ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        else
-            ray = new Ray(transform.position, transform.forward * maxCheckDistance);
-        if (Physics.Raycast(ray, out hit, maxCheckDistance, interactableLayerMask))
+        if (controller.isTPView)
         {
-            if (hit.collider.gameObject != curInteractingObject)
+            ray = new Ray[5]
             {
-                curInteractingObject = hit.collider.gameObject;
-                curInteractable = curInteractingObject.GetComponent<IInteractable>();
-                setPromptText();
-            }
+                new Ray(transform.position + Vector3.up * 0.01f, Vector3.forward),
+                new Ray(transform.position + Vector3.up * 0.1f, Vector3.forward),
+                new Ray(transform.position + Vector3.up * 0.9f, Vector3.forward),
+                new Ray(transform.position + Vector3.up * 1.2f, Vector3.forward),
+                new Ray(transform.position + Vector3.up * 1.8f, Vector3.forward)
+            };
         }
         else
         {
-            curInteractingObject = null;
-            curInteractable = null;
-            ItemInfoUI.SetActive(false);
+            ray = new Ray[1] { cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)) };
+        }
+
+        for (int i = 0; i < ray.Length; i++)
+        {
+            if (Physics.Raycast(ray[i], out hit, maxCheckDistance, interactableLayerMask))
+            {
+                if (hit.collider.gameObject != curInteractingObject)
+                {
+                    curInteractingObject = hit.collider.gameObject;
+                    curInteractable = curInteractingObject.GetComponent<IInteractable>();
+                    setPromptText();
+                }
+            }
+            else
+            {
+                curInteractingObject = null;
+                curInteractable = null;
+                ItemInfoUI.SetActive(false);
+            }
         }
     }
 }

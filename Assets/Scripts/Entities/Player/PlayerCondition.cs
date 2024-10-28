@@ -21,11 +21,6 @@ public class PlayerCondition : MonoBehaviour, IDamagable
         
     }
 
-    public void TakePhysicalDamage(int damage)
-    {
-        HP.Subtract(damage);
-        OnTakeDamage?.Invoke();
-    }
 
     private void Update()
     {
@@ -38,10 +33,20 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     {
         HP.Add(amount);
     }
-
-    public void ManaUP(float amount)
+    public void TakePhysicalDamage(int damage)
     {
-        ManaUP(amount);
+        HP.Subtract(damage);
+        OnTakeDamage?.Invoke();
+    }
+
+    public void GetMana(float amount)
+    {
+        MP.Add(amount);
+    }
+
+    public void UseMana(float amount)
+    {
+        MP.Subtract(amount);
     }
 
     public bool UseStamina(float amount)
@@ -53,5 +58,10 @@ public class PlayerCondition : MonoBehaviour, IDamagable
 
         Stamina.Subtract(amount);
         return true;
+    }
+
+    public void GetStamina(float amount)
+    {
+        Stamina.Add(amount);
     }
 }
