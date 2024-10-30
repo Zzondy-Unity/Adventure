@@ -17,9 +17,9 @@ public class CCTV : MonoBehaviour
         razor.CCTVPos = transform.position;
     }
 
-    public float minRot = -160f;
-    public float maxRot = -100f;
-    public float rotSpeed = 1.0f;
+    public float minRot;
+    public float maxRot;
+    public float rotSpeed;
     private float currentYRotation;
     private bool rotatingRight = true;
 
@@ -31,9 +31,12 @@ public class CCTV : MonoBehaviour
 
     private void CCTVRotation()
     {
+
         currentYRotation = transform.localEulerAngles.y;
 
+
         float rotationDelta = rotSpeed * Time.deltaTime;
+
 
         if (rotatingRight)
         {

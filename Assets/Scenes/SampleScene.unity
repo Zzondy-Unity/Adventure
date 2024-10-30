@@ -11141,14 +11141,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1070442858}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.11989072, y: -0.7608173, z: 0.14846428, w: 0.6202755}
+  m_LocalRotation: {x: -0.07585495, y: 0.8989082, z: -0.17510413, w: -0.39439642}
   m_LocalPosition: {x: 5.366333, y: 2.779255, z: 6.173893}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1830200189}
   m_Father: {fileID: 1182255983}
-  m_LocalEulerAnglesHint: {x: 22.002, y: -101.6, z: 0.108}
+  m_LocalEulerAnglesHint: {x: 22.002, y: 227.4, z: 0.108}
 --- !u!114 &1070442860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11161,9 +11161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8dce757fe6a8714abfb8a8641b79161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRot: -180
-  maxRot: -90
-  rotSpeed: 3
+  minRot: 200
+  maxRot: 260
+  rotSpeed: 20
 --- !u!135 &1070442861
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -11537,7 +11537,7 @@ Transform:
   m_GameObject: {fileID: 1112608566}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.000015228987, y: 1.5000031, z: 0.0000043064356}
+  m_LocalPosition: {x: -0.000015221536, y: 1.5000112, z: 0.0000052154064}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16120,14 +16120,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547802229}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.17638923, y: -0.6384726, z: 0.15273686, w: -0.7334242}
+  m_LocalRotation: {x: 0.19248816, y: 0.55169183, z: -0.13187121, w: 0.8007462}
   m_LocalPosition: {x: -7.966793, y: 2.4636345, z: -16.795757}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 419454180}
   m_Father: {fileID: 1182255983}
-  m_LocalEulerAnglesHint: {x: 26.986, y: -277.9, z: 0.077}
+  m_LocalEulerAnglesHint: {x: 26.986, y: 69.15, z: 0.077}
 --- !u!114 &1547802231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16140,9 +16140,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8dce757fe6a8714abfb8a8641b79161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRot: -332
-  maxRot: -278
-  rotSpeed: 3
+  minRot: 10
+  maxRot: 70
+  rotSpeed: 20
 --- !u!135 &1547802232
 SphereCollider:
   m_ObjectHideFlags: 0
