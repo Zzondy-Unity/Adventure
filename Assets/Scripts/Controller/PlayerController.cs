@@ -20,11 +20,11 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private LayerMask Ground;
-    private float rotSpeed = 10;
     private Vector3 inputVector;
     private float moveSpeed;
     private float jumpPower;
     private float runSpeed;
+    private float minRunSpeed = 1;
     private float runningStaminaDecay;
     public bool isRunning;
 
@@ -61,30 +61,45 @@ public class PlayerController : MonoBehaviour
         if (!isOpenInventory)
         {
             Move();
-            CameraLook();
-            animator.SetFloat("Speed", rb.velocity.magnitude);
         }
+    }
+
+    private void LateUpdate()
+    {
+        if(!isOpenInventory)
+        CameraLook();
     }
 
     private void Move()
     {
-        Vector3 moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
-        moveDirection = Camera.main.transform.forward * inputVector.y + Camera.main.transform.right * inputVector.x;
-        moveDirection.y = 0f;
-        moveDirection.Normalize();
-        if (isTPView && moveDirection != Vector3.zero)
+        Vector3 moveDirection = Vector3.one;
+        if (isTPView)
         {
-            Vector3 cameraRotation = Camera.main.transform.rotation.eulerAngles;
-            transform.rotation = Quaternion.Euler(0, cameraRotation.y, 0);
+            moveDirection = Camera.main.transform.forward * inputVector.y + Camera.main.transform.right * inputVector.x;
+        }
+        else
+        {
+            moveDirection = transform.forward * inputVector.y + transform.right * inputVector.x;
         }
 
-        moveDirection.y = rb.velocity.y;
-        if(isRunning && CharacterManager.Instance.player.condition.UseStamina(runningStaminaDecay * Time.deltaTime))
+        moveDirection.Normalize();
+
+        if (isRunning && CharacterManager.Instance.player.condition.UseStamina(runningStaminaDecay * Time.deltaTime))
         {
             moveDirection *= runSpeed;
         }
-        rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.deltaTime);
+        else
+        {
+            moveDirection *= minRunSpeed;
+        }
+        Vector3 horizontalVector = moveDirection * moveSpeed;
+        rb.velocity = new Vector3(horizontalVector.x, rb.velocity.y, horizontalVector.z);
+
+        animator.SetFloat("dirX", inputVector.x * moveSpeed);
+        animator.SetFloat("dirZ", inputVector.y * moveSpeed);
+        animator.SetFloat("Speed", (moveDirection * moveSpeed).magnitude);
     }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -132,6 +147,7 @@ public class PlayerController : MonoBehaviour
         mouseDelta = context.ReadValue<Vector2>();
     }
 
+    //시네머신으로 대체
     private void CameraLook()
     {
         verticalRotation -= mouseDelta.y * mouseSensitivity;
@@ -140,7 +156,10 @@ public class PlayerController : MonoBehaviour
         {
             // 3인칭: 카메라가 회전
             TPCamera.m_XAxis.Value += mouseDelta.x * mouseSensitivity;
-            TPCamera.m_YAxis.Value = verticalRotation; // 수직 회전
+            TPCamera.m_YAxis.Value = verticalRotation * 0.005f; // 수직 회전
+            Vector3 cameraRotation = Camera.main.transform.rotation.eulerAngles;
+            transform.rotation = Quaternion.Euler(0, cameraRotation.y, 0);
+
         }
         else
         {
@@ -173,10 +192,11 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         jumpPower = CharacterManager.Instance.player.playerData.jumpPower;
+        float jumpStamina = CharacterManager.Instance.player.playerData.jumpStamina;
 
         if (context.phase == InputActionPhase.Started && IsGround())
         {
-            if (CharacterManager.Instance.player.condition.UseStamina(jumpPower / 2))
+            if (CharacterManager.Instance.player.condition.UseStamina(jumpStamina / 2))
             {
                 Jump?.Invoke();
                 rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
@@ -187,22 +207,22 @@ public class PlayerController : MonoBehaviour
 
     public void OnRun(InputAction.CallbackContext context)
     {
-            runningStaminaDecay = CharacterManager.Instance.player.playerData.runningStaminaDecay;
-        if(context.phase == InputActionPhase.Performed)
+        runningStaminaDecay = CharacterManager.Instance.player.playerData.runningStaminaDecay;
+        if (context.phase == InputActionPhase.Performed)
         {
             runSpeed = CharacterManager.Instance.player.playerData.runSpeed;
             isRunning = true;
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
-            runSpeed = 1;
+            runSpeed = minRunSpeed;
             isRunning = false;
         }
     }
 
     public void OnToggleInventory(InputAction.CallbackContext context)
     {
-        if(context.phase == InputActionPhase.Started)
+        if (context.phase == InputActionPhase.Started)
         {
             ToggleInventory?.Invoke();
             Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.Confined : CursorLockMode.Locked;

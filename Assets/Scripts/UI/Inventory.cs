@@ -179,7 +179,10 @@ public class Inventory : MonoBehaviour
                     break;
                 case ItemType.Equipable:
                     if (slots[index].equipped)
+                    {
+                        unequipButton.SetActive(true);
                         break;
+                    }
                     else
                         equipButton.SetActive(true);
                     break;
@@ -199,13 +202,11 @@ public class Inventory : MonoBehaviour
             slots[selectedIndex].quantity = 0;
             slots[selectedIndex].curItemData = null;
         }
-        selectedIndex = -1;
-        ItemData = null;
         UpdateSlots();
     }
 
     //TODO :: 사용, 장착, 해제, 버리기 버튼 선택했을 때
-    private void OnUseButton()
+    public void OnUseButton()
     {
         if(ItemData.itemType == ItemType.Consumable)
         {
@@ -226,20 +227,39 @@ public class Inventory : MonoBehaviour
             }
         }
         RemoveSelectedItem();
+        OnItemSlotClick(selectedIndex);
     }
 
-    private void OnEquipButton()
+    public void OnEquipButton()
     {
-
+        if (CharacterManager.Instance.player.equip.curEquip != null)
+        {
+            return;
+        }
+        else
+        {
+            slots[selectedIndex].outline.enabled = true;
+            slots[selectedIndex].equipped = true;
+            CharacterManager.Instance.player.equip.NewEquip(slots[selectedIndex].curItemData);
+            UpdateSlots();
+        }
+        OnItemSlotClick(selectedIndex);
     }
 
-    private void OnUnequipButton()
+    public void OnUnequipButton()
     {
-
+        slots[selectedIndex].outline.enabled = false;
+        slots[selectedIndex].equipped = false;
+        CharacterManager.Instance.player.equip.UnEquip();
+        OnItemSlotClick(selectedIndex);
+        UpdateSlots();
     }
 
-    private void OnDropButton()
+    public void OnDropButton()
     {
-
+        if (slots[selectedIndex].equipped == true) return;
+        ThrowItem(ItemData);
+        UpdateSlots();
+        RemoveSelectedItem();
     }
 }

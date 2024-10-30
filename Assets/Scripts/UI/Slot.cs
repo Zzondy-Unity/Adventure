@@ -36,6 +36,7 @@ public class Slot : MonoBehaviour
     {
         curItemData = null;
         quantityText.text = string.Empty;
+        icon.sprite = null;
     }
 
     public void Setslot()

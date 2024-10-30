@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     internal PlayerCondition condition;
     internal PlayerData playerData;
     internal ItemSO itemData;
+    internal Equipment equip;
+    internal Rigidbody rb;
 
     public Action addItem;
 
@@ -20,5 +22,7 @@ public class Player : MonoBehaviour
         controller = GetComponent<PlayerController>();
         playerData = GetComponent<PlayerData>();
         condition = GetComponent<PlayerCondition>();
+        equip = GetComponent<Equipment>();
+        rb = GetComponent<Rigidbody>();
     }
 }

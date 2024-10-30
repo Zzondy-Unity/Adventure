@@ -8,6 +8,7 @@ public class PlayerData : EntityData
 
     [Header("Util")]
     public float jumpPower;
+    public float jumpStamina = 30;
     public float mouseSensitivity;
 }
 
