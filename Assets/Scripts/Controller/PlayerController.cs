@@ -52,7 +52,10 @@ public class PlayerController : MonoBehaviour
         FPCamera.enabled = false;
         TPCamera.enabled = true;
         isTPView = true;
+    }
 
+    private void Start()
+    {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
